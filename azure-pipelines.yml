@@ -1,0 +1,46 @@
+trigger: none
+
+pool: Basicinfra1905
+
+stages:
+  - stage: terraform
+    jobs:
+      - job: azureinfra
+        steps:
+        - task: TerraformInstaller@1
+          displayName: Terraform Installer
+          inputs:
+            terraformVersion: 'latest'
+
+        - task: TerraformTask@5
+          displayName: Terrafrom Init
+          inputs:
+            provider: 'azurerm'
+            command: 'init'
+            backendServiceArm: 'basicinfra1905-sc'
+            backendAzureRmStorageAccountName: 'storageaccount1905'
+            backendAzureRmContainerName: 'tfstatecontainer'
+            backendAzureRmKey: 'terraform.tfstate'
+
+        - task: TerraformTask@5
+          displayName: Terraform Validate
+          inputs:
+            provider: 'azurerm'
+            command: 'validate'
+
+        - task: TerraformTask@5
+          displayName: Terraform Plan
+          inputs:
+            provider: 'azurerm'
+            command: 'plan'
+            environmentServiceNameAzureRM: 'basicinfra1905-sc'
+        
+        - task: TerraformTask@5
+          displayName: Terraform Apply
+          inputs:
+            provider: 'azurerm'
+            command: 'apply'
+            commandOptions: '-auto-approve'
+            environmentServiceNameAzureRM: 'basicinfra1905-sc'
+
+
