@@ -17,6 +17,7 @@ stages:
           inputs:
             provider: 'azurerm'
             command: 'init'
+            workingDirectory: '$(System.DefaultWorkingDirectory)/root/'
             backendServiceArm: 'basicinfra1905-sc'
             backendAzureRmStorageAccountName: 'storageaccount1905'
             backendAzureRmContainerName: 'tfstatecontainer'
@@ -27,12 +28,14 @@ stages:
           inputs:
             provider: 'azurerm'
             command: 'validate'
+            workingDirectory: '$(System.DefaultWorkingDirectory)/root/'
 
         - task: TerraformTask@5
           displayName: Terraform Plan
           inputs:
             provider: 'azurerm'
             command: 'plan'
+            workingDirectory: '$(System.DefaultWorkingDirectory)/root/'
             environmentServiceNameAzureRM: 'basicinfra1905-sc'
         
         - task: TerraformTask@5
@@ -40,6 +43,7 @@ stages:
           inputs:
             provider: 'azurerm'
             command: 'apply'
+            workingDirectory: '$(System.DefaultWorkingDirectory)/root/'
             commandOptions: '-auto-approve'
             environmentServiceNameAzureRM: 'basicinfra1905-sc'
 
